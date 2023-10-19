@@ -1,6 +1,6 @@
 [package]
 name = "clap_main"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 description = "A crate to provide a #[clap_main] macro to automatically parse and pass args to your main function"
