@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 description = "A crate to provide a #[clap_main] macro to automatically parse and pass args to your main function"
-license = "GPLv3"
+license = "GPL-3.0-only"
 
 [lib]
 proc-macro = true
