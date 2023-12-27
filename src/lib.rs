@@ -1,10 +1,11 @@
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, ItemFn};
+use proc_macro2::{Ident, Span};
 
 #[proc_macro_attribute]
 pub fn clap_main(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    let f = parse_macro_input!(item as ItemFn);
+    let mut f = parse_macro_input!(item as ItemFn);
 
     let item_type = f
         .sig
@@ -12,7 +13,10 @@ pub fn clap_main(_attr: TokenStream, item: TokenStream) -> TokenStream {
         .first()
         .expect("Need exactly one argument to the function");
 
-    let name = f.sig.ident.clone();
+    let renamed_main = Ident::new("clap_rewritten_main", Span::call_site());
+
+
+    f.sig.ident = renamed_main.clone();
 
     let ty = match item_type {
         syn::FnArg::Receiver(recv) => match *recv.ty.clone() {
@@ -40,7 +44,7 @@ pub fn clap_main(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 },
             };
 
-            match #name(args) {
+            match #renamed_main(args) {
                 Ok(()) => {},
                 Err(e) => {
                     writeln!(&mut std::io::stderr(), "{e}").expect("Could not write to stderr!");
